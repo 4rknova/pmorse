@@ -1,0 +1,27 @@
+.TH PMORSE 1 "JANUARY 2011" UNIX "User Manuals"
+.SH NAME 
+pmorse \- morse encoder
+.SH SYNOPSIS
+.B pmorse [
+.I option
+]... 
+.B message
+.SH DESCRIPTION
+encodes a message to morse code.
+.SH OPTIONS
+.IP -i
+provides a command line to input messages and commands
+.IP "-f %i"
+Set the beep frequency
+.IP "-nosound"
+Disable sound
+.IP "-noscript"
+Disable script
+.IP "-p"
+Read data from stdin or a pipe
+.IP "-b"
+Use the bell character instead of the audio device
+.SH AUTHOR
+."BR bar (1)
+Written by Nikos Papadopoulos <nikpapas at gmail dot com>
+"
