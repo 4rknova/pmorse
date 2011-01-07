@@ -63,7 +63,6 @@ void init()
 #include <cstdio>
 
 
-unsigned int mode_interactive = 0;
 unsigned int mode_use_bell = 0;
 unsigned int mode_use_pipe = 0;
 unsigned int mode_no_sound = 0;
@@ -80,26 +79,12 @@ int parsecl(int argc, char **argv, std::string& msg)
 
 	for (int i = 1; i<argc; i++)
 	{
-		if (!strcmp(argv[i], "-i"))
-	  	{
-			if (mode_use_pipe)
-			{
-				fprintf(stderr,"Options -i and -p are incompatible\n");
-				return -1;
-			}
-			mode_interactive = 1;
-		}
-		else if(!strcmp(argv[i], "-b"))
+		if(!strcmp(argv[i], "-b"))
 		{
 			mode_use_bell = 1;
 		}
 		else if(!strcmp(argv[i], "-p"))
 		{
-			if (mode_interactive)
-			{
-				fprintf(stderr,"Options -i and -p are incompatible\n");
-				return -1;
-			}
 			mode_use_pipe = 1;
 		}
 		else if(!strcmp(argv[i], "-noscript"))
@@ -138,7 +123,7 @@ int parsecl(int argc, char **argv, std::string& msg)
 
 	}
 
-	if(msg.empty() && !mode_interactive && !mode_use_pipe)
+	if(msg.empty() && !mode_use_pipe)
 	{
 		printf("No message was given.\n");
 	}
@@ -175,19 +160,6 @@ int beep(unsigned int freq)
 
 	close(console_fd);
 	return 0;
-}
-
-void getmsg(std::string &str)
-{
-	std::string temp;
-	char c = 0;
-	while (c!='\n')
-	{
-		scanf("%c", &c);
-		temp+=c;
-		fflush(stdin);
-	}
-	str = temp;
 }
 
 #include <signal.h>
@@ -237,9 +209,7 @@ void play(std::string msg)
 				case '-': usleep(mode_freq * 2); /* Pauses for 3 * mode_freq */
 				case '.': usleep(mode_freq);	
 			}
-		
-			fflush(stdout);
-
+			fflush(stdout);	
 			if(!mode_no_sound)
 			{
 				beep(0);
@@ -252,68 +222,6 @@ void play(std::string msg)
 }
 
 int done = 0;
-
-void procom(std::string &proc)
-{
-	std::string msg = proc;
-	proc.clear();
-
-	if (!msg.compare(0, 2, ":q"))
-	{
-		printf("Shutting down..\n");
-		done++;
-		mode_interactive = 0;
-		mode_use_pipe = 0;
-	}
-	else if (!msg.compare(0, 5, ":bell"))
-	{
-		if(!msg.compare(6, 3, "off"))
-		{	
-			printf("Bell is now off\n");
-			mode_use_bell=1;
-		}
-		else
-		{
-			printf("Bell is now on\n");
-			mode_use_bell=0;
-		}
-	}
-	else if (!msg.compare(0, 7, ":script"))
-	{
-		if(!msg.compare(8, 3, "off"))
-		{	
-			printf("Script is now on\n");
-			mode_no_script=1;
-		}
-		else
-		{
-			printf("Script is now off\n");
-			mode_no_script=0;
-		}
-	}
-	else if (!msg.compare(0, 6, ":sound"))
-	{
-		if(!msg.compare(7, 3, "off"))
-		{
-			printf("Sound is now off\n");
-			mode_no_sound=1;
-		}
-		else
-		{
-			printf("Sound is now on\n");
-			mode_no_sound=0;
-		}
-	}
-	else if (!msg.compare(0, 5, ":freq"))
-	{
-		std::string num = msg.substr(msg.find_last_of(' '));
-		mode_freq = atoi(num.c_str());	
-	}
-	else
-	{
-		proc = msg;
-	}
-}
 
 int main(int argc, char **argv)
 {
@@ -328,20 +236,12 @@ int main(int argc, char **argv)
 	
 	while (!done)
 	{
-		procom(msg);
-		
 		if(!msg.empty())
 		{
 			play(msg);
 		}
 
-		if (mode_interactive)
-		{
-			/* Receive new input */
-			printf("pmorse > ");
-			getmsg(msg);
-		}
-		else if (mode_use_pipe)
+		if (mode_use_pipe)
 		{
 			char line[1000];
 			read(STDIN_FILENO, line, 999);
