@@ -1,4 +1,4 @@
-PMorse
+pmorse
 ======
 
 A basic morse encoder.
