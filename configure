@@ -1,6 +1,7 @@
 #!/bin/sh
 
 SWPKG="pmorse"
+PREFIX=/usr/local
 BPATH=bin
 VERSION=`head -n1 VERSION`
 DEBUGS=no
@@ -13,10 +14,15 @@ echo "#" >> Makefile
 
 for arg; do
 	case "$arg" in
+		--prefix=*)
+			value=`echo $arg | sed 's/--prefix=//'`
+			PREFIX=${value:-$prefix}
+			;;
+
         --enable-opt)
 			OPTSPD=yes
 			;;
-        --disable-opt)
+		--disable-opt)
 			OPTSPD=no
 			;;
 
@@ -49,6 +55,7 @@ echo "# auto generated makefile for $SWPKG v$VERSION" >> Makefile
 echo "#" >> Makefile
 
 echo "bpath = $BPATH" >> Makefile
+echo "PREFIX = $PREFIX" >> Makefile
 
 if [ ! -d "$BPATH" ]; then
     mkdir $BPATH
