@@ -21,7 +21,7 @@ RM = rm
 CC = gcc
 CXX = g++
 CCFLAGS = -std=c89 -Wall -Wno-strict-aliasing $(opt) $(dbg) -I$(spath)
-CXXFLAGS = -ansi -pedantic -Wall -Wno-strict-aliasing $(opt) $(dbg) -I$(spath)
+CXXFLAGS = -ansi -pedantic -Wall -Wno-strict-aliasing $(opt) $(dbg) -D'PM_VERSION="$(shell cat VERSION)"' -I$(spath)
 LDFLAGS = 
 
 $(bin): $(objc) $(objcc) $(objcpp)

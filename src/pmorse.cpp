@@ -49,7 +49,7 @@ unsigned int mode_freq = 80000;
 int parsecl(int argc, char **argv, std::string& msg)
 {
 	if( argc == 2 && ((!strcmp(argv[1], "-version")) || (!strcmp(argv[1], "-v")) || (!strcmp(argv[1], "-ver")))) {
-		printf("PMorse v0.9\nby Papadopoulos Nikos 2010\nusage: %s [option]... message\n", argv[0]);
+		printf("PMorse v%s\nby Papadopoulos Nikos 2010, 2012\nusage: %s [option]... message\n", PM_VERSION, argv[0]);
 		return 1;
 	}
 
