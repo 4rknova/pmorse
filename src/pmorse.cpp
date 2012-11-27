@@ -21,10 +21,10 @@ void init()
 	morsecode['3'] = "...--"; morsecode['4'] = "....-"; morsecode['5'] = ".....";
 	morsecode['6'] = "-...."; morsecode['7'] = "--..."; morsecode['8'] = "---..";
 	morsecode['9'] = "----.";
-	
+
 	/* English alphabet */
 	morsecode['A'] = ".-";   morsecode['B'] = "-..."; morsecode['C'] = "-.-.";
-	morsecode['D'] = "-..";  morsecode['E'] = "."; 	  morsecode['F'] = "..-.";
+	morsecode['D'] = "-..";  morsecode['E'] = ".";	  morsecode['F'] = "..-.";
 	morsecode['G'] = "--.";  morsecode['H'] = "...."; morsecode['I'] = "..";
 	morsecode['J'] = ".---"; morsecode['K'] = "-.-";  morsecode['L'] = ".-..";
 	morsecode['M'] = "--";   morsecode['N'] = "-.";   morsecode['O'] = "---";
@@ -49,7 +49,7 @@ unsigned int mode_freq = 80000;
 int parsecl(int argc, char **argv, std::string& msg)
 {
 	if( argc == 2 && ((!strcmp(argv[1], "-version")) || (!strcmp(argv[1], "-v")) || (!strcmp(argv[1], "-ver")))) {
-		printf("PMorse v%s\nby Papadopoulos Nikos 2010, 2012\nusage: %s [option]... message\n", PM_VERSION, argv[0]);
+		printf("PMorse v%s\nby Papadopoulos Nikos 2010, 2012\nusage: %s [option]... message\n", PMORSE_VERSION, argv[0]);
 		return 1;
 	}
 
@@ -98,13 +98,13 @@ int beep(unsigned int freq)
 	int console_fd = -1;
 	if((console_fd = open("/dev/console", O_WRONLY)) == -1) 
 		return -1;
-	
+
 	int f = freq > 0 ? CLOCK_TICK_RATE/(int)freq : 0;
 
 	ioctl(console_fd, KIOCSOUND, f);
 
 	close(console_fd);
-	
+
 	return 0;
 }
 
@@ -112,7 +112,7 @@ void terminate(int param)
 {
 	if(!mode_no_sound)
 		beep(0);
-	
+
 	printf("\n");
 	signal(SIGINT, SIG_DFL);
 }
@@ -123,12 +123,12 @@ void play(std::string &msg)
 		return;
 
 	for (unsigned int i = 0; i < msg.length(); i++) {
-    	usleep((msg[i] == ' ' || msg[i] == '\t')? mode_freq * 7 : mode_freq * 3);
+		usleep((msg[i] == ' ' || msg[i] == '\t')? mode_freq * 7 : mode_freq * 3);
 
 		for(unsigned int j = 0; j < morsecode[msg[i]].length(); j++) {
 			if(!mode_no_script)
 				printf("%c", morsecode[msg[i]][j]);
-			
+
 			switch (mode_use_bell)
 			{
 				case 0:
@@ -137,17 +137,17 @@ void play(std::string &msg)
 						beep(500);
 					break;
 				}
-				default: 
+				default:
 					bell();
 			}
 
-			switch (morsecode[msg[i]][j]) 
+			switch (morsecode[msg[i]][j])
 			{
 				case '-': usleep(mode_freq * 2);
-				case '.': usleep(mode_freq);	
+				case '.': usleep(mode_freq);
 			}
-	
-			fflush(stdout);	
+
+			fflush(stdout);
 
 			if(!mode_no_sound)
 				beep(0);
@@ -163,14 +163,14 @@ int done = 0;
 int main(int argc, char **argv)
 {
 	std::string msg;
-	
+
 	if (parsecl(argc, argv, msg))
 		return -1;
 
 	init();
-	
+
 	signal(SIGINT, &terminate);
-	
+
 	while (!done) {
 		if(!msg.empty()) {
 			std::transform(msg.begin(), msg.end(), msg.begin(), ::toupper);
