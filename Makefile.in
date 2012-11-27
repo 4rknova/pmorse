@@ -44,7 +44,6 @@ dirtree:
 
 
 $(BIN): dirtree $(BINOBJ)
-	echo $(BINOBJ)
 	$(CXX) $(LDFLAGS) $(CXXFLAGS) $(BINOBJ) $(DEP_DLIB) -o $@
 
 .PHONY: install
