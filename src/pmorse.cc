@@ -88,10 +88,8 @@ int beep(unsigned int freq)
 
 void terminate(int param)
 {
-	if(!mode_no_sound)
-		beep(0);
-
-	printf("\n");
+	if (!mode_no_sound)  beep(0);
+	if (!mode_no_script) printf("\n");
 	signal(SIGINT, SIG_DFL);
 }
 
@@ -139,7 +137,7 @@ void play(std::string &msg)
 		}
 	}
 
-	printf("\n");
+	if (!mode_no_script) printf("\n");
 }
 
 int main(int argc, char **argv)
@@ -155,13 +153,13 @@ int main(int argc, char **argv)
 	char line[BUFFER_SZ];
 
 	while (1) {
+		play(msg);
+
 		if (mode_use_pipe) {
 			memset(line, 0, BUFFER_SZ);
 			if (read(STDIN_FILENO, line, BUFFER_SZ-1) > 0) msg = line;
 		}
 		else break;
-
-		play(msg);
 	}
 
 	return 0;
